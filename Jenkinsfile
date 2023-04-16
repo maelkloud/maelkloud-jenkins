@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t your-dockerhub-username/python-webapp:${env.BUILD_ID} .'
+                sh 'docker build -t xmaeltht/python-webapp:${env.BUILD_ID} .'
             }
         }
 
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                     sh 'docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS'
-                    sh 'docker push your-dockerhub-username/python-webapp:${env.BUILD_ID}'
+                    sh 'docker push xmaeltht/python-webapp:${env.BUILD_ID}'
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage('Terraform Init and Apply') {
             steps {
                 sh 'terraform init'
-                sh 'terraform apply -auto-approve -var "docker_image=your-dockerhub-username/python-webapp:${env.BUILD_ID}"'
+                sh 'terraform apply -auto-approve -var "docker_image=xmaeltht/python-webapp:${env.BUILD_ID}"'
             }
         }
 
