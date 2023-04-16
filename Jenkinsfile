@@ -6,6 +6,9 @@ pipeline {
     environment {
         DOCKERHUB_CREDS = credentials('dockerhub_credentials')
         KUBECONFIG_CREDS = credentials('minikube_cred')
+        DOCKERHUB_USERNAME = '<DOCKER_HUB_USERNAME>'
+        DOCKERHUB_PASSWORD = '<DOCKER_HUB_PASSWORD>'
+        IMAGE_NAME = 'xmaeltht/python-webapp'
     }
 
     stages {
@@ -17,7 +20,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t xmaeltht/python-webapp:${env.BUILD_ID} .'
+                sh 'docker build -t ${IMAGE_NAME}:${env.BUILD_ID} .'
             }
         }
 
@@ -25,7 +28,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                     sh 'docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS'
-                    sh 'docker push xmaeltht/python-webapp:${env.BUILD_ID}'
+                    sh 'docker push ${IMAGE_NAME}:${env.BUILD_ID}'
                 }
             }
         }
@@ -33,7 +36,7 @@ pipeline {
         stage('Terraform Init and Apply') {
             steps {
                 sh 'terraform init'
-                sh 'terraform apply -auto-approve -var "docker_image=xmaeltht/python-webapp:${env.BUILD_ID}"'
+                sh 'terraform apply -auto-approve -var "docker_image=${IMAGE_NAME}:${env.BUILD_ID}"'
             }
         }
 
