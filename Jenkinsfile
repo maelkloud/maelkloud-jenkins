@@ -4,7 +4,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDS = credentials('dockerhub-credentials')
+        DOCKERHUB_CREDS = credentials('dockerhub_credentials')
         KUBECONFIG_CREDS = credentials('kubeconfig-credentials')
     }
 
