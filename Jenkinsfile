@@ -5,7 +5,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDS = credentials('dockerhub_credentials')
-        KUBECONFIG_CREDS = credentials('kubeconfig-credentials')
+        KUBECONFIG_CREDS = credentials('minikube_cred')
     }
 
     stages {
@@ -39,7 +39,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG_FILE')]) {
+                withCredentials([file(credentialsId: 'minikube_cred', variable: 'KUBECONFIG_FILE')]) {
                     sh 'kubectl --kubeconfig=$KUBECONFIG_FILE apply -f k8s-deployment.yaml'
                 }
             }
