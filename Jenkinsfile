@@ -44,7 +44,9 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "cp ${env.KUBECONFIG_FILE} kubeconfig.yaml"
+                        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_CONTENT')]) {
+                        writeFile file: 'kubeconfig.yaml', text: readFile(env.KUBECONFIG_CONTENT)
+                        sh "terraform init"
                         echo 'Running Terraform init...'
                         sh 'terraform init'
                         echo 'Terraform init completed.'
