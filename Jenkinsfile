@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "cp ${KUBECONFIG_FILE} kubeconfig.yaml"
+                        sh "cp ${env.KUBECONFIG_FILE} kubeconfig.yaml"
                         echo 'Running Terraform init...'
                         sh 'terraform init'
                         echo 'Terraform init completed.'
