@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: python-webapp
-        image: your-dockerhub-username/python-webapp:latest
+        image: xmaeltht/python-webapp:latest
         ports:
         - containerPort: 8080
         resources:
