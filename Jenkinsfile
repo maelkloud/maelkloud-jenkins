@@ -46,7 +46,7 @@ pipeline {
                     try {
                         withCredentials([file(credentialsId: 'minikube_cred', variable: 'KUBECONFIG_CONTENT')]) {
                             writeFile file: 'kubeconfig.yaml', text: readFile(env.KUBECONFIG_CONTENT)
-                            sh "terraform init"
+                            sh "terraform destroy -auto-approve"
                             echo 'Running Terraform init...'
                             sh 'terraform init'
                             echo 'Terraform init completed.'
