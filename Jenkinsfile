@@ -42,7 +42,7 @@ pipeline {
 
         stage('Terraform Init and Apply') {
             steps {
-                steps {
+                script {
                     try {
                         sh "cp ${KUBECONFIG_FILE} kubeconfig.yaml"
                         echo 'Running Terraform init...'
