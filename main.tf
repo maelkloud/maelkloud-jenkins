@@ -1,5 +1,5 @@
 provider "kubernetes" {
-  config_path    = "~/.kube/config"
+  config_path    = "kubeconfig.yaml"
 }
 
 resource "kubernetes_deployment" "python_webapp" {

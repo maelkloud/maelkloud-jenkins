@@ -42,8 +42,9 @@ pipeline {
 
         stage('Terraform Init and Apply') {
             steps {
-                script {
+                withCredentials([file(credentialsId: 'minikube_cred', variable: 'KUBECONFIG_FILE')]) {
                     try {
+                        sh "cp ${KUBECONFIG_FILE} kubeconfig.yaml"
                         echo 'Running Terraform init...'
                         sh 'terraform init'
                         echo 'Terraform init completed.'
