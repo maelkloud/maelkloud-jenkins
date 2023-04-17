@@ -20,15 +20,22 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ${IMAGE_NAME}:${env.BUILD_ID} .'
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_credentials') {
+                        def customImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}", "--file Dockerfile .")
+                    }
+                }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                    sh 'docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS'
-                    sh 'docker push ${IMAGE_NAME}:${env.BUILD_ID}'
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_credentials') {
+                        def customImage = docker.image("${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                        customImage.push()
+                        customImage.push('latest')
+                    }
                 }
             }
         }
