@@ -45,19 +45,20 @@ pipeline {
                 script {
                     try {
                         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_CONTENT')]) {
-                        writeFile file: 'kubeconfig.yaml', text: readFile(env.KUBECONFIG_CONTENT)
-                        sh "terraform init"
-                        echo 'Running Terraform init...'
-                        sh 'terraform init'
-                        echo 'Terraform init completed.'
-
-                        echo "IMAGE_NAME: ${IMAGE_NAME}"
-                        echo "BUILD_ID: ${env.BUILD_ID}"
-                        echo "Docker image: ${IMAGE_NAME}:${env.BUILD_ID}"
-
-                        echo 'Running Terraform apply...'
-                        sh "terraform apply -auto-approve -var 'docker_image=${IMAGE_NAME}:${env.BUILD_ID}'"
-                        echo 'Terraform apply completed.'
+                            writeFile file: 'kubeconfig.yaml', text: readFile(env.KUBECONFIG_CONTENT)
+                            sh "terraform init"
+                            echo 'Running Terraform init...'
+                            sh 'terraform init'
+                            echo 'Terraform init completed.'
+    
+                            echo "IMAGE_NAME: ${IMAGE_NAME}"
+                            echo "BUILD_ID: ${env.BUILD_ID}"
+                            echo "Docker image: ${IMAGE_NAME}:${env.BUILD_ID}"
+    
+                            echo 'Running Terraform apply...'
+                            sh "terraform apply -auto-approve -var 'docker_image=${IMAGE_NAME}:${env.BUILD_ID}'"
+                            echo 'Terraform apply completed.'
+                        }
                     } catch (Exception err) {
                         echo "Error: ${err}"
                         currentBuild.result = 'FAILURE'
